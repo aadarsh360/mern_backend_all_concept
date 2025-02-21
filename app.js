@@ -5,12 +5,14 @@ dotenv.config();
 
 import userRouter from './routes/user.js';
 import todoRouter from './routes/todo.js';
+import cookieParser from "cookie-parser";
 
 connectDB();
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 
 app.use('/api/v1/user', userRouter);

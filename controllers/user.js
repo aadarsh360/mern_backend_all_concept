@@ -1,5 +1,6 @@
 import { User } from "../models/user.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
 
@@ -13,7 +14,7 @@ export const register = async (req, res) => {
         }
 
         // find user ki with email id ki wo register to nhi
-        const user = await User.findOne({email});
+        const user = await User.findOne({ email });
         if (user) {
             return res.status(404).json({
                 success: false,
@@ -33,9 +34,9 @@ export const register = async (req, res) => {
     }
 }
 
-export const login = async (req, res)=>{
-    try{
-        const {email, password} = req.body;
+export const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
         if (!email || !password) {
             return res.status(404).json({
                 success: false,
@@ -44,29 +45,50 @@ export const login = async (req, res)=>{
         }
 
         // check user is availble or not by email
-        const user = await User.findOne({email});
-        if(!user){
+        const user = await User.findOne({ email });
+        if (!user) {
             return res.status(402).json({
-                success:false,
-                message:"Incorrect email or password"
+                success: false,
+                message: "Incorrect email or password"
             })
         }
 
         // check password
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if(!isPasswordMatch){
+        if (!isPasswordMatch) {
             return res.status(402).json({
-                success:false,
-                message:"Incorrect email or password"
+                success: false,
+                message: "Incorrect email or password"
             })
         }
 
-        return res.status(200).json({
+        // create token
+        const token = await jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: "1d" });
+
+        return res.status(200)
+            .cookie("token", token, {
+                httpOnly: true,
+                sameSite: "strict",
+                maxAge: 24 * 60 * 60 * 1000,
+            }).json({
+                success: true,
+                message: `Welcome back ${user.fullName}`
+            })
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// logout
+export const logout = async (_, res)=>{
+    try{
+        return res.status(200).cookie("token", "", {maxAge:0}).json({
             success:true,
-            message:`Welcome back ${user.fullName}`
+            message: "User logout successfully."
         })
     }
     catch(error){
-        res.status(500).json({message:error.message});
+        res.status(500).json({message: error.message});
     }
 }
