@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar';
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
@@ -10,16 +10,21 @@ function Home() {
 
     const [todos, setTodos] = useState([]);
 
+    // ✅ Fetch all todos from API
     const fetchAllTodo = async () => {
         try {
-            const response = await axios.get("http://localhost:8000/api/v1/todo");
-            console.log(response.data);
+            const response = await axios.get("http://localhost:8000/api/v1/todo", { withCredentials: true });
             setTodos(response.data.todos);
+        } catch (error) {
+            console.error("Error fetching todos:", error);
+            toast.error("Failed to fetch todos ❌");
         }
-        catch (error) {
+    };
 
-        }
-    }
+    // ✅ Fetch todos when component mounts
+    useEffect(() => {
+        fetchAllTodo();
+    }, []);
 
     // Function to add a todo (with API call)
     const addTodo = async (newTodo) => {
@@ -33,7 +38,7 @@ function Home() {
                 }
             );
 
-            setTodos([...todos, response.data]); // Update UI with response data
+            // setTodos([...todos, response.data]); // Update UI with response data
             toast.success("Todo added successfully! ✅"); // Success toast
             fetchAllTodo();
         } catch (error) {

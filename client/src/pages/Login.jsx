@@ -2,11 +2,15 @@ import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+
+
+    const navigate = useNavigate();
 
     // Login Function
     const handleLogin = async (e) => {
@@ -31,9 +35,9 @@ const Login = () => {
                     withCredentials: true,
                 }
             );
-
             toast.success("Login successful! ✅");
             // onLoginSuccess(response.data); // Callback to parent component
+            navigate('/');
         } catch (error) {
             toast.error("Login failed ❌");
         } finally {
