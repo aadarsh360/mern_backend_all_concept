@@ -11,7 +11,7 @@ const TodoInput = ({ addTodo }) => {
     setDescription("");
   };
 
-    // Handle Enter key press
+  // Handle Enter key press
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) { // Prevent Shift+Enter for multi-line text
       e.preventDefault(); // Prevents new line in textarea
@@ -20,30 +20,35 @@ const TodoInput = ({ addTodo }) => {
   };
 
   return (
-    <div className="bg-gray-100 p-4 rounded-lg shadow-md w-full max-w-lg mx-auto">
+    <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-lg shadow-xl w-full max-w-lg mx-auto">
+      <h2 className="text-white text-2xl font-semibold text-center mb-4">Create a New Todo</h2>
+
       <input
         type="text"
-        className="w-full px-4 py-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        placeholder="Todo Title..."
+        className="w-full px-4 py-3 mb-4 border border-transparent rounded-md focus:outline-none focus:ring-4 focus:ring-purple-400 text-gray-800 shadow-md placeholder-gray-500"
+        placeholder="📝 Enter Todo Title..."
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={handleKeyDown} // Listen for Enter key
       />
+
       <textarea
-        className="w-full px-4 py-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        placeholder="Todo Description..."
+        className="w-full px-4 py-3 mb-4 border border-transparent rounded-md focus:outline-none focus:ring-4 focus:ring-purple-400 text-gray-800 shadow-md placeholder-gray-500"
+        placeholder="🖊️ Enter Todo Description..."
         rows="3"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         onKeyDown={handleKeyDown} // Listen for Enter key
       ></textarea>
+
       <button
-        className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+        className="w-full bg-white text-blue-600 font-semibold px-4 py-3 rounded-md shadow-lg hover:bg-gray-100 transition transform hover:scale-105"
         onClick={handleAddTodo}
       >
-        Add Todo
+        ➕ Add Todo
       </button>
     </div>
+
   );
 };
 
